@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)file:///C:/Users/elder.santos/Downloads/index.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devocional Familiar</title>
+<link href="./Devocional Familiar_files/css2" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Lora',Georgia,serif;background:#faf8f3;color:#2a2420;min-height:100vh}
+.app{max-width:430px;margin:0 auto;min-height:100vh}
+.topbar{background:#1c1a15;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar-title{color:#c8a96e;font-size:16px;font-weight:700;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
+.avatar{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.screen{display:none;padding:0 16px 40px}
+.screen.active{display:block}
+.card{background:#fff;border:1px solid #e8e0d0;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.member-card{background:#fff;border:1px solid #e8e0d0;border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer}
+.tabs{display:flex;border-bottom:1px solid #e0d8c8;margin:14px 0}
+.tab-btn{flex:1;padding:8px 2px;text-align:center;font-size:11px;font-family:'Lora',serif;color:#a09070;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer}
+.tab-btn[data-tab="reflexao"].active{color:#1a4fa3;border-bottom-color:#1a4fa3;background:#f0f5ff;font-weight:700}
+.tab-btn[data-tab="oracao"].active{color:#0a6648;border-bottom-color:#0a6648;background:#f0faf5;font-weight:700}
+.tab-btn[data-tab="familia"].active{color:#5a35b0;border-bottom-color:#5a35b0;background:#f5f0ff;font-weight:700}
+.tab-btn[data-tab="eventos"].active{color:#a33a10;border-bottom-color:#a33a10;background:#fff5f0;font-weight:700}
+#tab-reflexao .card{border-top:3px solid #1a4fa3}
+#tab-oracao .card{border-top:3px solid #0a6648}
+#tab-familia .card{border-top:3px solid #5a35b0}
+#tab-eventos .card{border-top:3px solid #a33a10}
+.btn-primary{border:none;background:#1c1a15;border-radius:10px;padding:11px 20px;font-size:14px;font-family:'Lora',serif;color:#c8a96e;cursor:pointer;font-weight:700;width:100%}
+.btn{border:1.5px solid #c8a96e;background:transparent;border-radius:10px;padding:10px 16px;font-size:13px;font-family:'Lora',serif;color:#7a5e2a;cursor:pointer}
+textarea,input[type=text],input[type=date]{width:100%;border:1.5px solid #e0d8c8;border-radius:10px;padding:10px 12px;font-size:14px;font-family:'Lora',serif;color:#2a2420;background:#faf8f3;margin-bottom:8px}
+textarea{resize:none;height:90px}
+.response-item{background:#faf8f3;border:1px solid #ede8dd;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.reaction-btn{background:#fff;border:1px solid #e0d8c8;border-radius:20px;padding:3px 12px;font-size:13px;cursor:pointer;color:#7a5e2a;margin-right:6px}
+.empty{color:#b0a890;font-size:13px;font-style:italic;text-align:center;padding:20px}
+.progress-track{height:5px;background:#ede8dd;border-radius:3px;margin:10px 0 6px}
+.progress-fill{height:100%;background:#c8a96e;border-radius:3px;transition:width 0.4s}
+.status-badge{font-size:11px;padding:3px 10px;border-radius:10px;margin-left:auto}
+.status-yes{background:#d4f0e4;color:#0a6648}
+.status-no{background:#ede8dd;color:#a09070}
+.evento-item{background:#fff5f0;border:1px solid #fad4c0;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.back-btn{background:none;border:none;color:#c8a96e;font-size:22px;cursor:pointer;padding:14px 0 8px;display:block}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #c8a96e;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="topbar" id="topbar">
+  <div class="topbar-title">
+    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" stroke="#c8a96e" stroke-width="2.2" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="19"></line><line x1="2" y1="6" x2="14" y2="6"></line></svg>
+    DEVOCIONAL FAMILIAR
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="loadData()" style="background:none;border:none;color:#c8a96e;font-size:20px;cursor:pointer">↻</button>
+    <div id="top-avatar" class="avatar" style="width:34px;height:34px;font-size:13px;display:none"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen active" id="screen-login" style="padding:0 16px 40px">
+  <div style="text-align:center;padding:24px 0 20px">
+    <div style="width:100%;height:200px;border-radius:16px;overflow:hidden;margin-bottom:16px;position:relative">
+      <img src="data:image/jpeg;base64,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" style="width:100%;height:100%;object-fit:cover;object-position:center center" alt="Família Santos">
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(28,26,21,0.85));padding:16px 14px 12px">
+        <div style="color:#c8a96e;font-size:18px;font-weight:700;letter-spacing:1px">Família Santos</div>
+        <div style="color:#f5edd8;font-size:12px;font-style:italic">✝ Devocional Familiar</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#8a7e6a;font-style:italic;margin-bottom:4px">Entrar como:</div>
+  </div>
+  <div id="members-list">
+  <div class="member-card" onclick="doLogin(&#39;Elder&#39;)">
+    <div class="avatar" style="width:46px;height:46px;font-size:15px;background:#dce8fb;color:#1a4fa3">E</div>
+    <div style="font-size:16px;font-weight:700;color:#1c1a15;flex:1">Elder</div>
+    <span style="color:#c8a96e;font-size:22px">›</span>
+  </div>
+  <div class="member-card" onclick="doLogin(&#39;Dani&#39;)">
+    <div class="avatar" style="width:46px;height:46px;font-size:15px;background:#c8f0e0;color:#0a6648">D</div>
+    <div style="font-size:16px;font-weight:700;color:#1c1a15;flex:1">Dani</div>
+    <span style="color:#c8a96e;font-size:22px">›</span>
+  </div>
+  <div class="member-card" onclick="doLogin(&#39;Tina&#39;)">
+    <div class="avatar" style="width:46px;height:46px;font-size:15px;background:#e4d8fc;color:#5a35b0">T</div>
+    <div style="font-size:16px;font-weight:700;color:#1c1a15;flex:1">Tina</div>
+    <span style="color:#c8a96e;font-size:22px">›</span>
+  </div></div>
+  <p style="font-size:12px;color:#b0a890;text-align:center;margin-top:16px;font-style:italic">Cada membro abre esse link e escolhe seu nome</p>
+</div>
+
+<!-- HOME -->
+<div class="screen" id="screen-home">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="reflexao" onclick="switchTab(&#39;reflexao&#39;)">✝ Reflexão</button>
+    <button class="tab-btn" data-tab="oracao" onclick="switchTab(&#39;oracao&#39;)">🙏 Oração</button>
+    <button class="tab-btn" data-tab="familia" onclick="switchTab(&#39;familia&#39;)">❤ Família</button>
+    <button class="tab-btn" data-tab="eventos" onclick="switchTab(&#39;eventos&#39;)">📅 Eventos</button>
+  </div>
+
+  <div id="tab-reflexao">
+    <div style="font-size:12px;color:#a09070;font-style:italic;text-align:right;margin-bottom:10px" id="date-label"></div>
+    <div class="card">
+      <div style="font-size:13px;color:#c8a96e;font-weight:700;margin-bottom:6px" id="verse-ref"></div>
+      <div style="font-size:15px;font-style:italic;line-height:1.75;margin-bottom:10px" id="verse-text"></div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div style="font-size:12px;color:#a09070;margin-bottom:8px" id="progress-label">0 de 3 responderam</div>
+      <div style="font-size:13.5px;color:#5a4e3a;line-height:1.65;border-top:1px solid #e8e0d0;padding-top:10px" id="reflection-text"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="btn-primary" style="flex:2" onclick="showResponder()">Responder agora</button>
+      <button class="btn" style="flex:1;font-size:12px" id="gen-btn" onclick="generateNew()">Gerar novo ✦</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Respostas da família</div>
+    <div id="responses-list"></div>
+  </div>
+
+  <div id="tab-oracao" style="display:none">
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Oração do dia</div>
+      <div style="font-size:14px;font-style:italic;line-height:1.75" id="prayer-text"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Adicionar pedido</div>
+      <textarea id="prayer-input" placeholder="Compartilhe um pedido com a família..."></textarea>
+      <button class="btn-primary" onclick="submitPrayer()">Adicionar pedido</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Pedidos da família</div>
+    <div id="prayers-list"></div>
+  </div>
+
+  <div id="tab-familia" style="display:none">
+    <div class="card" id="members-status"></div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Progresso de hoje</div>
+      <div style="font-size:32px;font-weight:700;color:#c8a96e;margin-bottom:4px" id="big-progress">0%</div>
+      <div class="progress-track"><div class="progress-fill" id="big-progress-fill" style="width:0%"></div></div>
+      <p style="font-size:13px;color:#7a6e5a;margin-top:8px;font-style:italic" id="big-progress-label"></p>
+    </div>
+    <button class="btn" style="width:100%" onclick="logout()">Trocar de membro</button>
+  </div>
+
+  <div id="tab-eventos" style="display:none">
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Adicionar evento</div>
+      <input type="text" id="evento-titulo-input" placeholder="Nome do evento...">
+      <input type="date" id="evento-data-input">
+      <textarea id="evento-desc-input" placeholder="Descrição (opcional)..." style="height:70px"></textarea>
+      <button class="btn-primary" id="evento-btn" onclick="submitEvento()">Adicionar evento</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+      <input type="date" id="busca-data" style="flex:1;margin-bottom:0">
+      <button onclick="filtrarEventos()" style="border:none;background:#a33a10;color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;font-family:&#39;Lora&#39;,serif;cursor:pointer;white-space:nowrap">Buscar</button>
+      <button onclick="limparFiltro()" style="border:1.5px solid #e0d8c8;background:transparent;border-radius:10px;padding:9px 12px;font-size:13px;cursor:pointer;color:#a09070">✕</button>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Todos os eventos</div>
+    <div id="eventos-list"></div>
+  </div>
+</div>
+
+<!-- RESPONDER -->
+<div class="screen" id="screen-responder">
+  <button class="back-btn" onclick="goTo(&#39;screen-home&#39;)">← voltar</button>
+  <div class="card">
+    <div style="font-size:13px;color:#c8a96e;font-weight:700;margin-bottom:6px" id="rv-ref"></div>
+    <div style="font-size:14px;font-style:italic;line-height:1.75;margin-bottom:10px" id="rv-verse"></div>
+    <div style="font-size:13.5px;color:#5a4e3a;line-height:1.65;border-top:1px solid #e8e0d0;padding-top:10px" id="rv-reflection"></div>
+  </div>
+  <div class="card">
+    <div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Minha reflexão</div>
+    <textarea id="my-response" placeholder="Escreva o que esse versículo fala ao seu coração..."></textarea>
+    <button class="btn-primary" id="submit-btn" onclick="submitResponse()">Compartilhar com a família</button>
+  </div>
+  <div id="my-current-response"></div>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+import { getDatabase, ref, set, get, push } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+const CONFIG = {
+  apiKey: "AIzaSyB6e_PlGoScIv2uSl_h3LT3k3y-7NCCWFE",
+  authDomain: "devocional-familia-santos.firebaseapp.com",
+  databaseURL: "https://devocional-familia-santos-default-rtdb.firebaseio.com",
+  projectId: "devocional-familia-santos",
+  storageBucket: "devocional-familia-santos.firebasestorage.app",
+  messagingSenderId: "269913605839",
+  appId: "1:269913605839:web:7bbde8ddfc6310ad8b59ba"
+};
+
+const app = initializeApp(CONFIG);
+const db = getDatabase(app);
+
+const DEVOTIONALS = [
+  {ref:"Gênesis 1:1",verse:"No princípio, criou Deus os céus e a terra.",reflection:"Como a criação de Deus te inspira a cuidar do que Ele colocou em suas mãos? O que você pode fazer diferente hoje?",prayer:"Pai Criador, obrigado por cada detalhe da criação. Que nossa família cuide com amor do que Tu nos confiaste. Amém."},
+  {ref:"João 3:16",verse:"Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo o que nele crê não pereça, mas tenha a vida eterna.",reflection:"Você já parou para refletir na profundidade do amor de Deus por você pessoalmente? Como esse amor muda sua vida?",prayer:"Senhor, obrigado pelo maior presente já dado: Teu Filho. Que nossa família viva à altura desse amor. Amém."},
+  {ref:"Salmos 1:1-2",verse:"Bem-aventurado o homem que não anda no conselho dos ímpios... antes tem o seu prazer na lei do Senhor.",reflection:"O que alimenta sua mente e seu coração no dia a dia? Você está meditando na Palavra de Deus?",prayer:"Pai, que a Tua Palavra seja nosso deleite. Que cada membro desta família encontre prazer em Te conhecer. Amém."},
+  {ref:"Provérbios 1:7",verse:"O temor do Senhor é o princípio da sabedoria.",reflection:"O que significa temer a Deus no sentido bíblico? Como isso se manifesta nas suas decisões diárias?",prayer:"Senhor, dá-nos sabedoria que começa em Ti. Que tomemos decisões que Te honrem em casa, no trabalho e onde formos. Amém."},
+  {ref:"Isaías 41:10",verse:"Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus.",reflection:"Qual é o seu maior medo agora? Como a promessa de Deus \'eu sou contigo\' muda sua perspectiva?",prayer:"Pai, obrigado por estar conosco em todo momento. Que o medo não paralise nossa família, pois Tu nos guardas. Amém."},
+  {ref:"João 15:5",verse:"Eu sou a videira; vós sois os ramos. Quem permanece em mim, e eu nele, esse dá muito fruto; porque sem mim nada podeis fazer.",reflection:"O que significa para você \'permanecer em Jesus\' no dia a dia? Como isso muda suas atitudes e decisões?",prayer:"Senhor, que permaneçamos em Ti como os ramos na videira. Guia nossas escolhas e fortaleça nossos laços. Em nome de Jesus, Amém."},
+  {ref:"Salmos 133:1",verse:"Oh! como é bom e como é agradável que os irmãos vivam em união!",reflection:"Como nossa família pode cultivar mais unidade e harmonia? Há algo que precise ser perdoado ou resolvido?",prayer:"Pai, que possamos valorizar uns aos outros e celebrar nossas diferenças. Que nossa casa seja lugar de paz. Amém."},
+  {ref:"Provérbios 3:5-6",verse:"Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.",reflection:"Em qual área da sua vida está difícil confiar em Deus? O que impede essa entrega?",prayer:"Senhor, ensinai-nos a confiar completamente em Ti. Guia cada decisão desta família. Que Tua vontade prevaleça. Amém."},
+  {ref:"Efésios 4:32",verse:"E sede uns para com os outros benignos, misericordiosos, perdoando-vos uns aos outros.",reflection:"Há alguém em sua vida que você precisa perdoar? O que torna o perdão difícil para você?",prayer:"Jesus, Dá-nos o espírito de perdão. Liberta-nos do peso do rancor. Amém."},
+  {ref:"Mateus 6:33",verse:"Mas buscai primeiro o reino de Deus, e a sua justiça, e todas essas coisas vos serão acrescentadas.",reflection:"Na correria do dia a dia, o que costuma vir antes de Deus nas suas prioridades? Como reordenar isso?",prayer:"Pai, ajuda esta família a buscar Teu reino como primeira prioridade. Amém."},
+  {ref:"Filipenses 4:6-7",verse:"Não andeis ansiosos por coisa alguma; antes em tudo sejam os vossos pedidos conhecidos diante de Deus.",reflection:"O que está causando ansiedade em você agora? Como entregar isso a Deus em oração hoje?",prayer:"Senhor, Te entregamos todas as nossas preocupações. Que a Tua paz guarde nossos corações. Amém."},
+  {ref:"Josué 24:15",verse:"Quanto a mim e à minha casa, serviremos ao Senhor.",reflection:"Como nossa família demonstra na prática que serve ao Senhor? Que hábito espiritual podemos cultivar juntos?",prayer:"Pai, fortalece nossa decisão de Te servir a cada dia, em cada detalhe da nossa vida. Amém."},
+  {ref:"Romanos 8:28",verse:"Sabemos que todas as coisas contribuem juntamente para o bem daqueles que amam a Deus.",reflection:"Há alguma situação difícil na sua vida que você precisa confiar que Deus está no controle?",prayer:"Senhor, confiamos que tudo está em Tuas mãos. Que possamos ver Tua mão mesmo nos momentos difíceis. Amém."},
+  {ref:"Isaías 40:31",verse:"Os que esperam no Senhor renovam as suas forças, sobem com asas como águias.",reflection:"Em que área da sua vida você precisa renovar suas forças em Deus? O que te esgota mais?",prayer:"Pai, renova nossas forças a cada manhã. Que esta família aprenda a esperar em Ti. Amém."},
+  {ref:"Salmos 23:1",verse:"O Senhor é o meu pastor e nada me faltará.",reflection:"Em que área da sua vida você sente mais falta? Como confiar que o Senhor é seu pastor nessa necessidade?",prayer:"Senhor, Tu és nosso pastor. Guia cada membro desta família e supre nossas necessidades. Amém."},
+  {ref:"Jeremias 29:11",verse:"Porque sou eu que conheço os planos que tenho para vós... planos de bem e não de mal.",reflection:"Você já sentiu que Deus tinha um plano bom para sua vida mesmo em momentos difíceis?",prayer:"Pai, obrigado por ter planos de bem para nossa família. Que confiemos no Teu futuro. Amém."},
+  {ref:"Mateus 5:9",verse:"Bem-aventurados os pacificadores, porque eles serão chamados filhos de Deus.",reflection:"Você é um instrumento de paz no lar? O que você pode fazer hoje para trazer mais paz à sua família?",prayer:"Senhor, faz de nós pacificadores. Que nossa casa seja um lugar onde conflitos são resolvidos com amor. Amém."},
+  {ref:"Colossenses 3:13",verse:"Suportai-vos uns aos outros e perdoai-vos mutuamente.",reflection:"Há algo que você está guardando no coração contra alguém da família? O que impede o perdão?",prayer:"Jesus, ensinai-nos a nos suportar com amor. Que o perdão flua naturalmente em nossa família. Amém."},
+  {ref:"1 Coríntios 13:4-5",verse:"O amor é paciente, é benigno; o amor não arde em ciúmes, não se ufana.",reflection:"Qual dessas características do amor você mais precisa desenvolver? Como colocar em prática hoje?",prayer:"Pai, enche nossos corações com o Teu amor. Que amemos uns aos outros com ações e verdade. Amém."},
+  {ref:"Salmos 46:1",verse:"Deus é o nosso refúgio e força, socorro bem presente na angústia.",reflection:"Quando você está angustiado, qual é o seu primeiro recurso? Como buscar Deus antes de qualquer outra coisa?",prayer:"Senhor, Tu és nosso refúgio e força. Nos momentos de angústia, que nossa família corra primeiro a Ti. Amém."},
+  {ref:"Hebreus 10:25",verse:"Não deixemos de congregar-nos... antes, admoestemo-nos uns aos outros.",reflection:"Como sua família pode se apoiar espiritualmente? Que práticas vocês podem criar juntos?",prayer:"Pai, que esta família nunca abandone o hábito de se reunir em Teu nome. Amém."},
+  {ref:"Deuteronômio 6:6-7",verse:"Estas palavras que hoje te ordeno estarão no teu coração; e as inculcarás a teus filhos.",reflection:"Como você transmite a fé para os filhos no dia a dia? Que momentos do cotidiano podem ser usados para falar de Deus?",prayer:"Senhor, que Tua Palavra habite em nossos corações e em nossa casa. Amém."},
+  {ref:"Mateus 18:20",verse:"Porque onde estiverem dois ou três reunidos em meu nome, ali estou no meio deles.",reflection:"Quando foi a última vez que sua família se reuniu especificamente para buscar a Deus?",prayer:"Jesus, obrigado por estar no meio de nós quando nos reunimos em Teu nome. Amém."},
+  {ref:"Salmos 119:105",verse:"Lâmpada para os meus pés é a tua palavra e luz para o meu caminho.",reflection:"A Palavra de Deus tem guiado suas decisões? Há alguma decisão que você precisa levar para a Bíblia?",prayer:"Pai, que Tua Palavra seja nossa bússola. Que cada membro desta família tome decisões à luz do que Tu ensinas. Amém."},
+  {ref:"Gálatas 5:22-23",verse:"O fruto do Espírito é: amor, alegria, paz, longanimidade, benignidade, bondade, fidelidade.",reflection:"Qual fruto do Espírito você mais precisa desenvolver agora? Como isso afetaria seus relacionamentos?",prayer:"Espírito Santo, produz em nós o Teu fruto. Que nossa família seja reconhecida pelo amor e bondade. Amém."},
+  {ref:"Provérbios 22:6",verse:"Instrui o menino no caminho em que deve andar, e até quando envelhecer não se desviará dele.",reflection:"Que valores e ensinamentos você quer passar para os filhos? Está fazendo isso de forma intencional?",prayer:"Pai, dá-nos sabedoria para criar nossos filhos no Teu caminho. Que os valores do Teu reino sejam nossa herança. Amém."},
+  {ref:"Efésios 6:1-2",verse:"Filhos, obedecei a vossos pais no Senhor, porque isso é justo. Honra teu pai e tua mãe.",reflection:"Como a honra e o respeito se manifestam na sua família? O que pode ser melhorado?",prayer:"Senhor, que haja respeito e honra entre pais e filhos nesta família. Amém."},
+  {ref:"1 Pedro 5:7",verse:"Lançai sobre ele toda a vossa ansiedade, porque ele tem cuidado de vós.",reflection:"O que você está carregando sozinho que precisa lançar sobre Deus? O que impede essa entrega?",prayer:"Pai, recebe hoje todas as nossas preocupações. Que esta família lance sobre Ti o que não consegue carregar. Amém."},
+  {ref:"Romanos 12:10",verse:"Amai-vos sinceramente uns aos outros como irmãos; cada um considere os outros superiores a si mesmo.",reflection:"Você tem colocado os outros da família acima de si mesmo? O que impede isso no dia a dia?",prayer:"Senhor, ensina-nos o amor genuíno. Que em nossa família cada um busque o bem do outro antes do seu próprio. Amém."},
+  {ref:"Salmos 127:1",verse:"Se o Senhor não edificar a casa, em vão trabalham os que a edificam.",reflection:"Deus está no centro da construção da sua família? O que precisa mudar para colocá-Lo no lugar certo?",prayer:"Pai, edifica Tu mesmo esta família. Que todos os nossos esforços sejam guiados por Ti e para Tua glória. Amém."},
+  {ref:"Tiago 1:19",verse:"Todo homem seja pronto para ouvir, tardio para falar e tardio para se irar.",reflection:"Você ouve mais do que fala na sua família? Como melhorar a comunicação em casa?",prayer:"Senhor, dá-nos ouvidos atentos e línguas sábias. Que o diálogo em nossa família seja marcado por respeito. Amém."},
+  {ref:"Miquéias 6:8",verse:"Ele te declarou o que é bom: praticar a justiça, amar a misericórdia e andar humildemente com teu Deus.",reflection:"Das três coisas citadas — justiça, misericórdia e humildade — qual você mais precisa exercitar?",prayer:"Senhor, que sejamos uma família justa, misericordiosa e humilde. Que Teu caráter se reflita em cada um de nós. Amém."},
+  {ref:"João 14:27",verse:"Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá.",reflection:"Você tem vivido com a paz que Jesus prometeu? O que tem roubado essa paz de você?",prayer:"Jesus, que a Tua paz guarde nossos corações e mentes. Que nossa família seja um porto de paz. Amém."},
+  {ref:"2 Timóteo 1:7",verse:"Porque Deus não nos deu espírito de covardia, mas de poder, de amor e de moderação.",reflection:"Em que área da sua vida você precisa agir com mais coragem e fé? O que te paralisa?",prayer:"Pai, que o espírito de poder, amor e disciplina habite em cada membro desta família. Amém."},
+  {ref:"Números 6:24-26",verse:"O Senhor te abençoe e te guarde; o Senhor faça resplandecer o seu rosto sobre ti.",reflection:"Como você tem abençoado os outros membros da sua família com palavras e atitudes?",prayer:"Senhor, que esta bênção repouse sobre cada membro da família Santos. Que Teu rosto resplandeça sobre nós. Amém."},
+  {ref:"Apocalipse 3:20",verse:"Eis que estou à porta e bato; se alguém ouvir a minha voz e abrir a porta, entrarei em sua casa.",reflection:"Jesus está sendo convidado para o centro da sua casa e das suas decisões? O que precisa mudar?",prayer:"Jesus, abrimos a porta do nosso lar para Ti. Que sejas o convidado de honra desta família todos os dias. Amém."},
+  {ref:"Provérbios 4:23",verse:"Sobre tudo o que se deve guardar, guarda o teu coração, porque dele procedem as saídas da vida.",reflection:"O que está entrando no seu coração através dos olhos e ouvidos? Você está sendo cuidadoso com isso?",prayer:"Pai, guarda os corações de cada membro desta família. Que alimentemos nossa alma com o que é puro. Amém."},
+  {ref:"Mateus 5:14",verse:"Vós sois a luz do mundo; não se pode esconder uma cidade edificada sobre um monte.",reflection:"Como sua família tem sido luz no ambiente onde vive? Há oportunidades de influenciar positivamente os que estão ao redor?",prayer:"Senhor, que nossa família brilhe como luz. Que nossas vidas sejam testemunho do Teu amor. Amém."},
+  {ref:"Salmos 19:14",verse:"Sejam as palavras da minha boca e a meditação do meu coração agradáveis diante de ti.",reflection:"Suas palavras em casa têm edificado ou destruído? O que você pode mudar na forma de falar com a família?",prayer:"Pai, que as palavras desta família sejam sempre agradáveis a Ti e construtivas para quem as ouve. Amém."},
+  {ref:"1 Coríntios 10:13",verse:"Fiel é Deus, que não vos deixará tentar acima do que podeis.",reflection:"Você sente que suas tentações são grandes demais? Como a fidelidade de Deus te dá esperança?",prayer:"Senhor, obrigado por ser fiel. Que nossa família encontre em Ti a saída de cada tentação e dificuldade. Amém."},
+  {ref:"Efésios 5:25",verse:"Vós, maridos, amai vossas mulheres, como Cristo amou a igreja.",reflection:"O amor na família tem sido sacrificial e incondicional? O que você pode fazer para amar melhor?",prayer:"Pai, que o amor em nossa família seja do tipo que se entrega. Que sigamos o exemplo de Cristo. Amém."},
+  {ref:"Salmos 127:3",verse:"Eis que os filhos são herança do Senhor, e o fruto do ventre, o seu galardão.",reflection:"Como você tem tratado os filhos como herança preciosa de Deus? Que tempo e atenção você tem dado a eles?",prayer:"Senhor, obrigado pelos filhos como presente Teu. Que os criemos com sabedoria, amor e propósito eterno. Amém."},
+  {ref:"Lucas 15:20",verse:"E levantando-se, foi ter com seu pai. E quando ainda estava longe, viu-o seu pai e se moveu de compaixão.",reflection:"Há alguém na sua família ou círculo social que está longe de Deus? Como você pode ser instrumento de restauração?",prayer:"Pai, que sejamos como o pai da parábola — de braços abertos para quem está longe. Amém."},
+  {ref:"Isaías 26:3",verse:"Tu conservarás em perfeita paz aquele cujo propósito está firme, porque em ti confia.",reflection:"Sua mente está fixada em Deus ou nas circunstâncias? O que roba sua paz?",prayer:"Senhor, fixa nossos pensamentos em Ti. Que a paz perfeita que Tu prometes governe nossas mentes e corações. Amém."},
+  {ref:"Mateus 6:14",verse:"Porque, se perdoardes aos homens as suas ofensas, também vosso Pai celestial vos perdoará.",reflection:"Há alguém que você ainda não perdoou completamente? O que acontece com você quando guarda rancor?",prayer:"Senhor, liberta nossa família do peso do rancor. Que o perdão flua entre nós como flui do Teu coração. Amém."},
+  {ref:"Salmos 139:14",verse:"Dar-te-ei graças, porque de um modo assombrosamente maravilhoso me formaste.",reflection:"Você se aceita como Deus te criou? Há algo em si mesmo que você precisa aprender a valorizar?",prayer:"Pai, que cada membro desta família saiba que foi feito de forma maravilhosa por Ti. Amém."},
+  {ref:"Romanos 8:1",verse:"Portanto, agora nenhuma condenação há para os que estão em Cristo Jesus.",reflection:"Você vive em condenação por erros do passado? Como a verdade de que não há condenação em Cristo te liberta?",prayer:"Jesus, obrigado por nos libertar da condenação. Que nossa família viva em liberdade. Amém."},
+  {ref:"Provérbios 17:17",verse:"Em todo o tempo ama o amigo, e na angústia nasce o irmão.",reflection:"Como você tem sido um amigo fiel para os membros da sua família? Você está presente nas dificuldades deles?",prayer:"Senhor, que sejamos família de verdade — presentes nos momentos difíceis, leais em todo tempo. Amém."},
+  {ref:"João 15:13",verse:"Ninguém tem maior amor do que este: de dar alguém a sua vida pelos seus amigos.",reflection:"Você está disposto a abrir mão dos seus interesses pelo bem dos que ama? O que isso significa no cotidiano?",prayer:"Jesus, que amemos como Tu amaste — com sacrifício real. Amém."},
+  {ref:"Salmos 56:3",verse:"No dia em que tiver medo, em ti porei a minha confiança.",reflection:"Você admite seus medos ou finge que não tem? Como levar o medo honestamente à presença de Deus?",prayer:"Pai, recebe hoje os medos desta família. Que em cada momento de temor corramos para Ti. Amém."},
+  {ref:"Colossenses 4:6",verse:"A vossa palavra seja sempre agradável, temperada com sal.",reflection:"Como você tem respondido às pessoas ao seu redor, especialmente em momentos de conflito?",prayer:"Senhor, que nossas palavras em casa sejam sempre temperadas com graça. Amém."},
+  {ref:"1 Crônicas 16:34",verse:"Rendei graças ao Senhor, porque ele é bom, porque a sua misericórdia dura para sempre.",reflection:"Você tem cultivado um espírito de gratidão? O que você pode agradecer hoje que normalmente passa despercebido?",prayer:"Pai, que a gratidão seja marca da nossa família. Obrigado pela Tua misericórdia que é nova a cada manhã. Amém."},
+  {ref:"Mateus 22:37-38",verse:"Amarás o Senhor teu Deus de todo o teu coração, e de toda a tua alma, e de todo o teu entendimento.",reflection:"Você ama a Deus com todo o seu ser — coração, alma e mente? O que divide esse amor?",prayer:"Pai, que Te amemos com tudo o que somos. Que o amor a Ti seja a força que move nossa família. Amém."},
+  {ref:"2 Coríntios 4:17",verse:"Porque este momentâneo e leve peso de tribulação nos produz uma eterna e excessiva glória.",reflection:"Como você tem encarado as tribulações? Você consegue vê-las como temporárias à luz da glória eterna?",prayer:"Senhor, que enxerguemos nossas dificuldades com perspectiva eterna. Amém."},
+  {ref:"Salmos 23:4",verse:"Ainda que eu andasse pelo vale da sombra da morte, não temeria mal nenhum, porque tu estás comigo.",reflection:"Você já passou por um vale difícil? Como a presença de Deus te sustentou?",prayer:"Pai, que mesmo nos vales mais escuros saibamos que Tu estás conosco. Amém."},
+  {ref:"Lucas 10:27",verse:"Amarás o Senhor teu Deus de todo o teu coração... e ao teu próximo como a ti mesmo.",reflection:"Quem é o seu próximo mais imediato? Você tem amado sua família com a mesma intensidade com que cuida de si mesmo?",prayer:"Senhor, que o amor ao próximo comece dentro de casa. Que cuidemos uns dos outros como cuidamos de nós mesmos. Amém."},
+  {ref:"Isaías 43:2",verse:"Quando passares pelas águas, eu serei contigo; e pelos rios, eles não te submergirão.",reflection:"Que águas difíceis sua família está atravessando agora? Como a promessa de Deus te conforta?",prayer:"Pai, que nas águas difíceis sintamos Tua presença. Que nossa família não seja submersa. Amém."},
+  {ref:"Provérbios 15:1",verse:"A resposta branda desvia o furor, mas a palavra dura suscita a ira.",reflection:"Como você tem respondido em momentos de conflito? Uma resposta branda já resolveu uma situação difícil?",prayer:"Senhor, dá-nos sabedoria para responder com brandura. Que o conflito em nossa família seja desarmado pelo amor. Amém."},
+  {ref:"Salmos 118:24",verse:"Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.",reflection:"Você tem começado o dia com gratidão ou com queixas? Como mudar sua perspectiva sobre o novo dia?",prayer:"Pai, que acordemos cada manhã com gratidão pelo dia que Tu fizeste. Que a alegria seja nossa marca. Amém."},
+  {ref:"João 16:33",verse:"No mundo tendes tribulações; mas tende bom ânimo; eu venci o mundo.",reflection:"Você se lembra que Jesus já venceu quando enfrenta dificuldades? Como essa vitória muda sua perspectiva?",prayer:"Jesus, Tu venceste! Que nossa família viva com a confiança de quem está do lado do vencedor. Amém."},
+  {ref:"Efésios 4:26",verse:"Irais-vos, mas não pequeis; não se ponha o sol sobre a vossa ira.",reflection:"Você deixa conflitos e mágoas se arrastarem? Como resolver as questões antes do fim do dia?",prayer:"Senhor, que o sol nunca se ponha sobre a ira em nossa família. Que resolvamos os conflitos com rapidez e amor. Amém."},
+  {ref:"Salmos 91:1",verse:"O que habita no esconderijo do Altíssimo, à sombra do Onipotente descansará.",reflection:"Você tem habitado na presença de Deus, não apenas visitado? O que significa fazer da presença de Deus seu lar?",prayer:"Pai, que nossa família habite na Tua sombra. Que encontremos descanso real na Tua presença todos os dias. Amém."},
+  {ref:"1 Samuel 16:7",verse:"O homem vê o que está diante dos olhos, porém o Senhor olha para o coração.",reflection:"Você tem julgado os outros pela aparência? Como olhar para as pessoas como Deus olha?",prayer:"Pai, dá-nos olhos que enxergam o coração. Que não julguemos pela aparência. Amém."},
+  {ref:"Gálatas 2:20",verse:"Já estou crucificado com Cristo; e vivo, não mais eu, mas Cristo vive em mim.",reflection:"O que significa Cristo viver em você na prática? Há áreas da sua vida onde você ainda insiste em ser o dono?",prayer:"Senhor, que Cristo viva em nós de verdade. Que morramos para o egoísmo e vivamos para Ti. Amém."},
+  {ref:"Salmos 37:4",verse:"Deleita-te também no Senhor, e ele te concederá os desejos do teu coração.",reflection:"Seus desejos estão alinhados com os de Deus? Quando você se deleita em Deus, o que isso significa na prática?",prayer:"Pai, que nossos desejos sejam os Teus desejos. Que nossa família encontre alegria em Te servir. Amém."},
+  {ref:"Romanos 15:13",verse:"Ora, o Deus de esperança vos encha de todo o gozo e paz no crer.",reflection:"Você está cheio de esperança ou de pessimismo? O que está roubando a esperança da sua vida?",prayer:"Senhor Deus da esperança, enche nossa família de gozo e paz. Amém."},
+  {ref:"Marcos 10:14",verse:"Deixai os pequeninos virem a mim e não os embaraceis, porque dos tais é o reino de Deus.",reflection:"Como você tem recebido as crianças da sua família? Está facilitando ou dificultando o encontro delas com Jesus?",prayer:"Jesus, que as crianças desta família Te conheçam e Te amem. Amém."},
+  {ref:"Efésios 3:20",verse:"Ora, àquele que é poderoso para fazer tudo muito mais abundantemente além do que pedimos ou pensamos.",reflection:"Seus pedidos a Deus são muito pequenos? Você tem ousado crer que Ele pode fazer mais do que imagina?",prayer:"Pai, que tenhamos fé para pedir além do que imaginamos. Que nossa família experimente Tua provisão abundante. Amém."},
+  {ref:"João 13:34",verse:"Um novo mandamento vos dou: que vos ameis uns aos outros; assim como eu vos amei.",reflection:"O amor entre os membros da sua família é semelhante ao amor de Jesus?",prayer:"Jesus, que amemos uns aos outros como Tu nos amaste. Que esse amor seja a marca da nossa família. Amém."},
+  {ref:"Isaías 58:11",verse:"O Senhor te guiará continuamente, fartará a tua alma nos lugares secos.",reflection:"Em que área da sua vida você sente que está em um lugar seco? Como buscar a plenitude de Deus aí?",prayer:"Pai, em nossos momentos secos, sacia nossa sede. Guia nossa família continuamente. Amém."},
+  {ref:"1 Pedro 4:8",verse:"Antes de tudo, tende ardente amor uns pelos outros, porque o amor cobre uma multidão de pecados.",reflection:"Você tem coberto os erros dos seus familiares com amor ou os exposto?",prayer:"Senhor, que o amor ardente cubra as falhas em nossa família. Que escolhamos o amor sempre. Amém."},
+  {ref:"Mateus 5:7",verse:"Bem-aventurados os misericordiosos, porque eles alcançarão misericórdia.",reflection:"Você tem sido misericordioso com quem erra, especialmente em casa?",prayer:"Pai, que sejamos uma família misericordiosa. Que tratemos os erros uns dos outros com a mesma misericórdia. Amém."},
+  {ref:"Salmos 4:8",verse:"Em paz me deito e logo passo a dormir, pois só tu, Senhor, me fazes habitar em segurança.",reflection:"Você tem dormido com paz ou com preocupações? O que impede seu descanso?",prayer:"Senhor, que nossa família repouse com paz. Que ao fim do dia depositemos todas as preocupações nas Tuas mãos. Amém."},
+  {ref:"2 Coríntios 12:9",verse:"A minha graça te basta, porque o meu poder se aperfeiçoa na fraqueza.",reflection:"Você já experimentou o poder de Deus em sua fraqueza?",prayer:"Senhor, que nossas fraquezas sejam palco do Teu poder. Amém."},
+  {ref:"Jeremias 33:3",verse:"Clama a mim e te responderei e te anunciarei coisas grandes e ocultas que não sabes.",reflection:"Você tem clamado a Deus com expectativa de ouvir Sua resposta?",prayer:"Pai, que clamemos a Ti e esperemos Tua resposta. Que nossa família experimente o Deus que responde. Amém."},
+  {ref:"Romanos 12:12",verse:"Regozijai-vos na esperança, sede pacientes na tribulação, perseverai em oração.",reflection:"Como está sua tríade: esperança, paciência e oração? Qual precisa de mais atenção?",prayer:"Senhor, que nos regozijemos na esperança e perseveremos na oração. Amém."},
+  {ref:"Efésios 6:4",verse:"E vós, pais, não provoqueis vossos filhos à ira, mas criai-os na disciplina e na admoestação do Senhor.",reflection:"Como tem sido sua relação com os filhos — provocando ou edificando?",prayer:"Senhor, dá-nos sabedoria para criar os filhos com amor e disciplina. Amém."},
+  {ref:"João 8:32",verse:"E conhecereis a verdade, e a verdade vos libertará.",reflection:"Há mentiras que você acredita sobre si mesmo, sobre Deus? Como a verdade da Palavra te liberta?",prayer:"Jesus, que Tua verdade liberte cada membro desta família. Amém."},
+  {ref:"1 Coríntios 13:7",verse:"O amor tudo sofre, tudo crê, tudo espera, tudo suporta.",reflection:"Seu amor tem limites? Você desiste das pessoas quando se decepciona?",prayer:"Senhor, que o amor em nossa família seja resistente. Que suporte, creia, espere e persevere. Amém."},
+  {ref:"Mateus 7:7",verse:"Pedi e dar-se-vos-á; buscai e achareis; batei e abrir-se-vos-á.",reflection:"Você tem pedido, buscado e batido à porta de Deus? O que você precisa levar a Ele hoje com persistência?",prayer:"Senhor, que nossa família seja persistente na oração. Que não desistamos de pedir, buscar e bater. Amém."},
+  {ref:"Salmos 145:18",verse:"O Senhor está perto de todos os que o invocam, de todos os que o invocam em verdade.",reflection:"Deus está perto de você agora. Como isso muda a forma como você enfrenta o dia de hoje?",prayer:"Pai, obrigado por estar perto de nós. Que invoquemos Teu nome com sinceridade. Amém."},
+  {ref:"Hebreus 12:1",verse:"Corramos com perseverança a carreira que nos está proposta, olhando para Jesus.",reflection:"O que está pesando e impedindo você de correr bem na vida cristã?",prayer:"Senhor, que livremos nossa família dos pesos que nos travam. Que corramos com perseverança. Amém."},
+  {ref:"Zacarias 4:6",verse:"Não por força nem por violência, mas pelo meu Espírito, diz o Senhor dos Exércitos.",reflection:"Você tem tentado resolver tudo na sua força? Como depender mais do Espírito de Deus?",prayer:"Pai, que não confiemos na nossa própria força. Que o Teu Espírito conduza nossa família. Amém."},
+  {ref:"João 1:12",verse:"Mas a todos quantos o receberam, deu-lhes o poder de serem feitos filhos de Deus.",reflection:"Você vive com a consciência de que é filho de Deus? Como essa identidade muda a forma que você se vê?",prayer:"Senhor, que nossa família viva como filhos e filhas do Rei. Amém."},
+  {ref:"Romanos 8:38-39",verse:"Porque nada nos poderá separar do amor de Deus que está em Cristo Jesus nosso Senhor.",reflection:"Há situação que faz você duvidar do amor de Deus? Como esse versículo te traz segurança?",prayer:"Senhor, que nossa família tenha certeza do Teu amor inabalável. Nada nos separará de Ti. Amém."},
+  {ref:"Habacuque 2:4",verse:"O justo viverá pela sua fé.",reflection:"Sua fé tem sustentado seu cotidiano ou é algo apenas para os domingos?",prayer:"Senhor, que nossa família viva pela fé em cada detalhe. Que confiemos em Ti além do que podemos ver. Amém."},
+  {ref:"João 15:16",verse:"Não fostes vós que me escolhestes a mim, mas eu vos escolhi a vós.",reflection:"Você sabe que foi escolhido por Jesus? Como essa certeza muda a forma como você enfrenta rejeições?",prayer:"Jesus, obrigado por nos teres escolhido. Que nossa família viva com a segurança de quem foi amado primeiro. Amém."},
+  {ref:"Efésios 4:2",verse:"Com toda a humildade e mansidão, com longanimidade, suportando-vos uns aos outros em amor.",reflection:"Como você tem suportado os defeitos dos seus familiares?",prayer:"Senhor, que a humildade e mansidão marquem nossa família. Que nos suportemos uns aos outros com amor. Amém."},
+  {ref:"Mateus 19:26",verse:"Para os homens é impossível, mas para Deus tudo é possível.",reflection:"Há uma situação na sua família que parece impossível? Como crer que para Deus nada é impossível?",prayer:"Senhor, que creiamos no possível de Deus mesmo diante do impossível humano. Amém."},
+  {ref:"Salmos 103:8",verse:"O Senhor é misericordioso e gracioso, tardio em irar-se e grande em benignidade.",reflection:"Como você tem demonstrado misericórdia e paciência com os seus?",prayer:"Pai, que sejamos misericordiosos como Tu és. Que a paciência e a benignidade sejam nossas respostas naturais. Amém."},
+  {ref:"Isaías 54:10",verse:"A minha benignidade não se retirará de ti, nem a aliança da minha paz será removida.",reflection:"Você sente que tudo ao redor muda? Como a imutável benignidade de Deus te dá estabilidade?",prayer:"Pai, quando tudo mudar ao redor, que saibamos que Tua benignidade é permanente. Amém."},
+  {ref:"Salmos 86:11",verse:"Ensina-me, Senhor, o teu caminho, e eu andarei na tua verdade.",reflection:"Você tem pedido a Deus para te ensinar? Há um caminho específico onde você precisa da instrução Dele?",prayer:"Senhor, ensina-nos o Teu caminho. Que nossa família ande na Tua verdade. Amém."},
+  {ref:"Romanos 12:19",verse:"Amados, nunca vos vingueis a vós mesmos; mas dai lugar à ira de Deus.",reflection:"Você guarda rancor ou entrega a Deus a justiça que é Dele?",prayer:"Senhor, liberta nossa família do desejo de vingança. Que entreguemos a Ti as injustiças que sofremos. Amém."},
+  {ref:"1 Coríntios 15:58",verse:"Sede firmes e constantes, sempre abundando na obra do Senhor.",reflection:"Você está firme na fé ou oscilante? O que te mantém constante nos dias difíceis?",prayer:"Senhor, que nossa família seja firme e constante. Que não nos abalemos nas tempestades. Amém."},
+  {ref:"João 4:14",verse:"A água que eu lhe der será nele uma fonte de água que salte para a vida eterna.",reflection:"Você tem bebido das fontes certas? Onde você busca saciar a sede da sua alma?",prayer:"Jesus, que bebamos de Ti e não de fontes que deixam secos. Amém."},
+  {ref:"Tiago 5:16",verse:"A oração feita por um justo tem grande eficácia.",reflection:"Você acredita no poder das suas orações? Como fortalecer a vida de oração da sua família?",prayer:"Senhor, que nossa família seja uma família que ora com eficácia. Que creiamos que nossas orações fazem diferença. Amém."},
+  {ref:"Provérbios 11:2",verse:"Com a soberba vem a vergonha, mas com os humildes está a sabedoria.",reflection:"Em que área você tende a agir com arrogância? Como a humildade pode trazer mais sabedoria?",prayer:"Pai, guarda-nos do orgulho. Que a humildade seja o caminho da nossa família para a sabedoria. Amém."},
+  {ref:"Salmos 36:7",verse:"Quão preciosa é a tua benignidade, ó Deus! E os filhos dos homens se abrigam à sombra das tuas asas.",reflection:"Você sente a proteção de Deus como abrigo? Há membros da família que precisam ser levados a essa sombra?",prayer:"Pai, que toda a nossa família se abrigue sob Tuas asas. Amém."},
+  {ref:"Hebreus 13:5",verse:"Contentai-vos com o que tendes, porque ele disse: Não te deixarei, nem te abandonarei.",reflection:"Você está em paz com o que tem? Como a promessa de Deus de nunca te abandonar te liberta do materialismo?",prayer:"Pai, que nos contentemos com o que tens dado. Que a certeza de Tua presença seja mais que suficiente. Amém."},
+  {ref:"João 6:35",verse:"Jesus lhes disse: Eu sou o pão da vida; aquele que vem a mim não terá fome.",reflection:"Você tem procurado em Jesus a satisfação da sua alma?",prayer:"Jesus, sacia a fome de cada membro desta família. Que encontremos em Ti o que nenhum outro lugar pode oferecer. Amém."},
+  {ref:"Provérbios 27:17",verse:"Assim como o ferro afia o ferro, assim um homem afia o rosto do outro.",reflection:"Quem na sua família te desafia a crescer? Como você pode ser esse instrumento de crescimento para outros?",prayer:"Pai, que os membros desta família se afiem mutuamente. Que crescamos juntos em caráter e fé. Amém."},
+  {ref:"Salmos 147:3",verse:"Ele sara os quebrantados de coração e lhes curta as feridas.",reflection:"Há alguma ferida emocional que você carrega há muito tempo? Como confiar esse processo de cura a Deus?",prayer:"Senhor, sara os corações feridos desta família. Que Tua cura alcance cada área de dor. Amém."},
+  {ref:"Mateus 25:40",verse:"Em verdade vos digo que, quando o fizestes a um destes meus pequeninos irmãos, a mim o fizestes.",reflection:"Como você tem servido as pessoas mais vulneráveis ao seu redor? Isso começa em casa?",prayer:"Jesus, que sirvamos uns aos outros como se fosse a Ti. Amém."},
+  {ref:"Salmos 16:8",verse:"Tenho posto o Senhor continuamente diante de mim; porque está à minha direita, não serei abalado.",reflection:"Você mantém consciência da presença de Deus ao longo do dia? Como cultivar essa prática?",prayer:"Senhor, que Te mantenhamos continuamente diante de nós. Que Tua presença seja nossa âncora. Amém."},
+  {ref:"João 20:21",verse:"Assim como o Pai me enviou, eu também vos envio.",reflection:"Você se vê como enviado por Deus? Como cumprir essa missão começando pela própria família?",prayer:"Jesus, que nos sintamos enviados como Tu foste enviado. Que nossa missão comece em casa. Amém."},
+  {ref:"Efésios 5:19",verse:"Falando entre vós em salmos, hinos e cânticos espirituais; cantando e louvando ao Senhor.",reflection:"O louvor tem espaço na sua casa? Como a música e o cântico podem enriquecer a vida espiritual da família?",prayer:"Pai, que o louvor seja natural em nossa família. Que Teu nome seja exaltado em nossa casa com alegria. Amém."},
+  {ref:"Mateus 7:24",verse:"Todo aquele que ouve estas minhas palavras e as pratica é semelhante a um homem prudente que edificou sua casa sobre a rocha.",reflection:"Sua família está construída sobre a rocha? Quais fundamentos espirituais sustentam sua casa?",prayer:"Senhor, que nossa família esteja edificada sobre Ti, a Rocha. Que os ventos e as tempestades não a derrubem. Amém."},
+  {ref:"1 João 3:18",verse:"Meus filhinhos, não amemos de palavra, nem de língua, mas por obra e em verdade.",reflection:"Seu amor é prático? Como transformar declarações de amor em ações concretas no dia a dia?",prayer:"Pai, que nosso amor seja real e prático. Que as palavras de afeto sejam acompanhadas de ações genuínas. Amém."},
+  {ref:"Provérbios 28:13",verse:"O que encobre as suas transgressões nunca prosperará, mas o que as confessa e deixa alcançará misericórdia.",reflection:"Você tem escondido erros ou vivendo com transparência?",prayer:"Pai, que vivamos com transparência. Que nossa família não esconda os erros, mas os confesse. Amém."},
+  {ref:"Isaías 61:3",verse:"Para dar-lhes uma coroa em vez de cinza, óleo de alegria em vez de pranto.",reflection:"Há tristeza na sua vida que precisa ser trocada pelo óleo de alegria de Deus?",prayer:"Senhor, troca nossa cinza por coroa, nosso pranto por alegria. Que Tua restauração alcance nossa família. Amém."},
+  {ref:"Salmos 62:8",verse:"Esperai nele em todo o tempo, ó povo; derramai o vosso coração diante dele.",reflection:"Você tem derramado seu coração diante de Deus com honestidade?",prayer:"Senhor, que nossa família derrame o coração diante de Ti. Que sejas nosso refúgio em todo tempo. Amém."},
+  {ref:"Gálatas 5:1",verse:"Foi para a liberdade que Cristo nos libertou. Ficai, pois, firmes.",reflection:"Há hábitos, pensamentos ou relacionamentos que te prendem? Como viver na liberdade que Cristo conquistou?",prayer:"Pai, que vivamos na liberdade que Cristo nos deu. Que nenhum membro desta família volte ao jugo do qual fomos libertados. Amém."},
+  {ref:"Salmos 34:18",verse:"O Senhor está perto dos que têm o coração quebrantado e salva os de espírito abatido.",reflection:"Você está com o coração partido? Como a proximidade de Deus com os quebrantados te consola?",prayer:"Senhor, que os membros desta família que estão com o coração partido sintam Tua proximidade especial. Amém."},
+  {ref:"Mateus 5:8",verse:"Bem-aventurados os puros de coração, porque eles verão a Deus.",reflection:"O que ocupa mais seus pensamentos? Como buscar pureza de coração em um mundo cheio de distrações?",prayer:"Senhor, que nossos corações sejam puros. Que nossa família guarde a mente com o que é verdadeiro e puro. Amém."},
+  {ref:"Salmos 73:25",verse:"A quem tenho eu no céu senão a ti? E além de ti, nada desejo na terra.",reflection:"Deus é realmente suficiente para você? O que mais você coloca no lugar que só Ele pode ocupar?",prayer:"Senhor, que sejas mais do que suficiente para nossa família. Que além de Ti não desejemos outro. Amém."},
+  {ref:"Salmos 119:9",verse:"Como purificará o jovem o seu caminho? Observando-o segundo a tua palavra.",reflection:"Como você tem orientado os jovens da sua família? A Palavra de Deus é a bússola das decisões deles?",prayer:"Pai, que os jovens desta família andem segundo Tua Palavra. Amém."},
+  {ref:"Filipenses 1:6",verse:"Tendo por certo que aquele que em vós começou a boa obra a completará até ao dia de Jesus Cristo.",reflection:"Você está desanimado com seu crescimento espiritual? Como a certeza de que Deus completa a obra te encoraja?",prayer:"Senhor, que confiemos que Tu completarás o que começaste em nós. Amém."},
+  {ref:"Provérbios 16:9",verse:"O coração do homem planeja o seu caminho, mas o Senhor lhe dirige os passos.",reflection:"Seus planos têm espaço para a direção de Deus? Como ser flexível quando Ele redireciona seu caminho?",prayer:"Pai, que planejemos mas deixemos os Teus redirecionamentos. Amém."},
+  {ref:"Mateus 6:34",verse:"Não vos preocupeis, pois, com o dia de amanhã.",reflection:"Quanta energia você gasta preocupado com o futuro? Como viver plenamente o dia de hoje?",prayer:"Senhor, liberta nossa família da ansiedade com o amanhã. Amém."},
+  {ref:"João 15:7",verse:"Se vós permanecerdes em mim e as minhas palavras permanecerem em vós, pedireis o que quiserdes.",reflection:"Você está permanecendo em Cristo? Como a Palavra de Deus tem habitado em você?",prayer:"Jesus, que permaneçamos em Ti e Tua Palavra em nós. Que nossa família produza fruto abundante. Amém."},
+  {ref:"Salmos 30:5",verse:"O choro pode durar uma noite, mas a alegria vem pela manhã.",reflection:"Você está atravessando uma noite de choro? Como a certeza de que a alegria vem pela manhã te sustenta?",prayer:"Pai, que os que choram nesta família saibam que a alegria vem. Amém."},
+  {ref:"2 Coríntios 5:17",verse:"Portanto, se alguém está em Cristo, é nova criatura; as coisas antigas já passaram.",reflection:"Você tem vivido como nova criatura ou ainda carregando a velha vida?",prayer:"Jesus, que vivamos plenamente como novas criaturas em Ti. Amém."},
+  {ref:"Salmos 100:4",verse:"Entrai pelas suas portas com ação de graças, e nos seus átrios com louvor.",reflection:"Você começa seus dias com gratidão e louvor?",prayer:"Pai, que entremos na Tua presença com gratidão todos os dias. Amém."},
+  {ref:"Filipenses 2:3",verse:"Nada façais por contenda ou por vanglória, mas por humildade, considerando os outros superiores a si mesmo.",reflection:"Você age com humildade ou busca reconhecimento?",prayer:"Senhor, que a humildade governe nossa família. Amém."},
+  {ref:"João 14:1",verse:"Não se turbe o vosso coração; crede em Deus, crede também em mim.",reflection:"Seu coração está perturbado por algo? Como a fé em Jesus pode trazer calma?",prayer:"Jesus, que nossos corações não se perturbem. Que a fé em Ti traga paz. Amém."},
+  {ref:"Salmos 145:9",verse:"O Senhor é bom para com todos e as suas misericórdias estão sobre todas as suas obras.",reflection:"Como você tem visto a bondade de Deus nas coisas do dia a dia?",prayer:"Pai, abre nossos olhos para ver Tua bondade em cada detalhe. Amém."},
+  {ref:"Mateus 5:44",verse:"Amai os vossos inimigos e orai pelos que vos perseguem.",reflection:"Há alguém difícil de amar na sua vida? Como orar por essa pessoa pode mudar sua perspectiva?",prayer:"Senhor, que possamos amar até quem nos faz mal. Amém."},
+  {ref:"Provérbios 3:27",verse:"Não te recuses a fazer o bem ao que é necessitado, quando tiveres poder para fazê-lo.",reflection:"Há alguém próximo que precisa de ajuda e você pode oferecer?",prayer:"Pai, que não adiemos o bem que podemos fazer. Que nossa família seja pronta para servir. Amém."},
+  {ref:"Filipenses 3:13-14",verse:"Esquecendo-me das coisas que ficaram para trás... prossigo para o alvo.",reflection:"Você está preso a erros ou fracassos do passado? Como avançar?",prayer:"Pai, que nossa família não viva olhando para trás. Que prossigamos com determinação. Amém."},
+  {ref:"Mateus 5:13",verse:"Vós sois o sal da terra.",reflection:"Como você tem influenciado o ambiente em que vive? Seu sabor de Cristo tem sido perceptível?",prayer:"Pai, que sejamos sal que realça o sabor da vida ao redor. Amém."},
+  {ref:"Salmos 119:165",verse:"Grande paz têm os que amam a tua lei, e não há para eles tropeço.",reflection:"A Palavra de Deus tem sido fonte de paz para você?",prayer:"Pai, que nossa família ame Tua lei e encontre grande paz. Amém."},
+  {ref:"Apocalipse 22:20",verse:"Sim, venho sem demora! Amém. Vem, Senhor Jesus!",reflection:"Você vive com a expectativa da volta de Jesus? Como essa esperança molda suas escolhas diárias?",prayer:"Jesus, aguardamos Tua vinda com expectativa. Que nossa família viva em santidade e missão. Amém."},
+  {ref:"Salmos 34:8",verse:"Provai e vede que o Senhor é bom; bem-aventurado o homem que nele se refugia.",reflection:"Quando foi a última vez que você sentiu visivelmente a bondade de Deus?",prayer:"Senhor, que provemos e vejamos Tua bondade a cada dia. Que nossa família seja testemunha de que Tu és bom. Amém."},
+  {ref:"Romanos 5:8",verse:"Mas Deus prova o seu amor para conosco em que Cristo morreu por nós, sendo nós ainda pecadores.",reflection:"Você já tentou merecer a graça de Deus?",prayer:"Pai, obrigado por amarmos antes de merecermos. Que vivamos em gratidão por esse amor incondicional. Amém."},
+  {ref:"Salmos 37:23",verse:"Os passos do homem são confirmados pelo Senhor, e ele se compraz no seu caminho.",reflection:"Você tem buscado a direção de Deus para cada passo?",prayer:"Pai, confirma nossos passos. Que cada decisão desta família seja orientada por Ti. Amém."},
+  {ref:"Mateus 5:3",verse:"Bem-aventurados os pobres de espírito, porque deles é o reino dos céus.",reflection:"Você reconhece sua dependência de Deus? O que significa ser pobre de espírito na prática?",prayer:"Senhor, guarda-nos do orgulho. Que reconheçamos nossa necessidade de Ti a cada dia. Amém."},
+  {ref:"Hebreus 11:1",verse:"Ora, a fé é a certeza de coisas que se esperam e a convicção de coisas que não se veem.",reflection:"Em que área da sua vida você precisa exercitar mais fé?",prayer:"Pai, aumenta nossa fé. Que mesmo sem ver, confiemos nas Tuas promessas. Amém."},
+  {ref:"Salmos 27:14",verse:"Espera no Senhor; tem bom ânimo, e ele fortalecerá o teu coração.",reflection:"Esperar é difícil para você? Que resposta de Deus você está esperando?",prayer:"Pai, que nossa família aprenda a esperar com esperança. Amém."},
+  {ref:"1 Pedro 1:15",verse:"Sede vós também santos em toda a vossa maneira de viver.",reflection:"O que significa ser santo no dia a dia?",prayer:"Senhor, chama-nos à santidade. Que nossa família reflita Teu caráter em tudo. Amém."},
+  {ref:"Salmos 20:7",verse:"Uns confiam em carros, outros em cavalos, mas nós mencionamos o nome do Senhor.",reflection:"Em que você está confiando para resolver os desafios da vida?",prayer:"Senhor, que nossa confiança esteja em Teu nome. Amém."},
+  {ref:"Tiago 4:7",verse:"Sujeitai-vos, pois, a Deus; mas resisti ao diabo, e ele fugirá de você.",reflection:"Em que área da sua vida você precisa resistir mais firmemente ao inimigo?",prayer:"Senhor, que nos sujeitemos a Ti e resistamos ao inimigo. Amém."},
+  {ref:"Salmos 42:1",verse:"Como o cervo anseia pelas correntes das águas, assim, ó Deus, a minha alma anseia por ti.",reflection:"Sua alma tem sede de Deus? O que está saciando essa sede no lugar errado?",prayer:"Senhor, que nossa alma anseie por Ti acima de tudo. Amém."},
+  {ref:"Lucas 1:37",verse:"Porque para Deus nada é impossível.",reflection:"Há uma situação que você considera impossível na sua família?",prayer:"Pai, que creiamos no Teu poder sobre o impossível. Amém."},
+  {ref:"Salmos 111:10",verse:"O temor do Senhor é o princípio da sabedoria; os seus mandamentos têm bom entendimento.",reflection:"Você toma decisões buscando a sabedoria de Deus primeiro?",prayer:"Senhor, que comecemos toda sabedoria no Teu temor. Amém."},
+  {ref:"Tiago 1:17",verse:"Toda boa dádiva e todo dom perfeito são do alto, descendendo do Pai das luzes.",reflection:"Você tem reconhecido as boas dádivas de Deus na sua vida?",prayer:"Pai das luzes, obrigado por cada boa dádiva. Que nossa família reconheça em Tua mão tudo o que é bom. Amém."},
+  {ref:"Salmos 139:23-24",verse:"Sonda-me, ó Deus, e conhece o meu coração; prova-me e conhece os meus pensamentos.",reflection:"Você permite que Deus examine seu coração?",prayer:"Senhor, sonda nossos corações. Que vivamos com transparência diante de Ti. Amém."},
+  {ref:"João 10:27",verse:"As minhas ovelhas ouvem a minha voz; eu as conheço e elas me seguem.",reflection:"Você está ouvindo a voz de Jesus? Como distinguir a voz de Deus das outras vozes?",prayer:"Jesus, que sua família ouça e reconheça Tua voz. Amém."},
+  {ref:"Salmos 107:28-29",verse:"Então clamaram ao Senhor na sua angústia, e ele os livrou das suas perturbações.",reflection:"Em que tempestade você está agora?",prayer:"Senhor, que em cada tempestade clamemos a Ti. Amém."},
+  {ref:"Salmos 115:1",verse:"Não a nós, Senhor, não a nós, mas ao teu nome dá glória.",reflection:"Você busca glória para si mesmo ou para Deus?",prayer:"Senhor, que toda glória seja Tua. Que nossa família não busque reconhecimento, mas que Teu nome seja exaltado. Amém."},
+  {ref:"Provérbios 17:22",verse:"O coração alegre é um bom remédio, mas o espírito abatido seca os ossos.",reflection:"Como você tem cultivado alegria? Que práticas espirituais te ajudam?",prayer:"Senhor, que a alegria do Teu Senhor seja nossa força. Amém."},
+  {ref:"Salmos 23:6",verse:"Bondade e misericórdia certamente me seguirão todos os dias da minha vida.",reflection:"Você vive com certeza de que a bondade e misericórdia de Deus te seguem?",prayer:"Senhor, que a certeza das Tuas bondades nos siga todos os dias. Amém."},
+  {ref:"Mateus 9:38",verse:"Rogai ao Senhor da seara que mande trabalhadores para a sua seara.",reflection:"Você ora para que Deus levante obreiros? Como sua família pode fazer parte da resposta?",prayer:"Pai, que sejamos obreiros no Teu campo. Amém."},
+  {ref:"Hebreus 6:19",verse:"A qual esperança temos por âncora da alma, segura e firme.",reflection:"Você tem Jesus como âncora da sua alma?",prayer:"Pai, que Jesus seja a âncora de nossa família. Amém."},
+  {ref:"João 12:26",verse:"Se alguém me serve, siga-me, e onde eu estiver, aí estará também o meu servo.",reflection:"Onde Jesus está, você está disposto a ir também?",prayer:"Jesus, que Te sigamos onde quer que Tu estejas. Amém."},
+  {ref:"Salmos 71:5",verse:"Porque tu és a minha esperança, Senhor Deus; tu és a minha confiança desde a minha mocidade.",reflection:"Deus tem sido sua esperança desde cedo? Como transmitir essa confiança para as próximas gerações?",prayer:"Senhor, que sejas nossa esperança desde a juventude. Amém."},
+  {ref:"Romanos 12:1",verse:"Apresenteis os vossos corpos em sacrifício vivo, santo e agradável a Deus.",reflection:"Você tem apresentado sua vida como oferta a Deus?",prayer:"Pai, que ofereçamos nossas vidas a Ti. Que nossa família viva como culto a Ti. Amém."},
+  {ref:"Salmos 72:18",verse:"Bendito o Senhor Deus, o Deus de Israel, o único que faz maravilhas.",reflection:"Quais maravilhas de Deus você tem testemunhado? Como compartilhar com sua família?",prayer:"Pai, que falemos das Tuas maravilhas uns aos outros. Amém."},
+  {ref:"Provérbios 21:21",verse:"O que segue a justiça e a benignidade achará a vida, a justiça e a honra.",reflection:"Você tem seguido a justiça e a bondade no cotidiano?",prayer:"Pai, que sigamos a justiça e a bondade. Que nossa família seja conhecida por esses valores. Amém."},
+  {ref:"Efésios 4:15",verse:"Mas seguindo a verdade em amor, cresçamos em tudo naquele que é a cabeça, Cristo.",reflection:"Você tem falado a verdade com amor em casa?",prayer:"Jesus, que crescemos em Ti em tudo. Que a verdade e o amor andem juntos em nossa família. Amém."},
+  {ref:"Romanos 4:20-21",verse:"Abraham não duvidou da promessa de Deus... plenamente convicto de que Deus era poderoso.",reflection:"Você está plenamente convicto de que Deus cumpre Suas promessas?",prayer:"Pai, dá-nos a fé de Abraão. Que nossa família confie plenamente em Teu poder. Amém."},
+  {ref:"2 Coríntios 1:3-4",verse:"O Pai de misericórdias e o Deus de toda a consolação, que nos consola em toda a nossa tribulação.",reflection:"Você tem recebido a consolação de Deus para poder consolar outros?",prayer:"Pai de toda consolação, que confortes nossa família e que possamos consolar uns aos outros. Amém."},
+  {ref:"Efésios 6:18",verse:"Orando em todo o tempo com toda oração e súplica no Espírito.",reflection:"Como está a sua vida de oração? Você ora em todo tempo ou apenas em momentos de crise?",prayer:"Pai, que a oração seja nossa respiração constante. Que nossa família ore no Espírito em todo tempo. Amém."},
+  {ref:"Mateus 18:19",verse:"Se dois de vós concordarem na terra a respeito de qualquer coisa que pedirem, isso lhes será feito.",reflection:"Sua família ora unida por pedidos específicos?",prayer:"Jesus, que nossa família ore unida. Que concordemos diante de Ti. Amém."},
+  {ref:"Salmos 18:2",verse:"O Senhor é a minha rocha, a minha fortaleza e o meu libertador.",reflection:"Em momentos de insegurança, você corre para Deus como sua rocha?",prayer:"Senhor, que nossa família Te encontre como Rocha firme. Amém."},
+  {ref:"1 Coríntios 16:14",verse:"Que tudo o que fizerdes seja feito em amor.",reflection:"Qual atividade do seu dia pode ser feita com mais amor?",prayer:"Pai, que o amor seja o motivo de tudo que fazemos. Amém."},
+  {ref:"Isaías 40:11",verse:"Como pastor apascentará o seu rebanho; com o seu braço ajuntará os cordeiros.",reflection:"Você já se sentiu carregado por Deus como um cordeiro?",prayer:"Senhor Pastor, que nossa família sinta Teu cuidado terno. Amém."},
+  {ref:"Gálatas 6:2",verse:"Levai os fardos uns dos outros e assim cumprireis a lei de Cristo.",reflection:"Você está carregando fardos sozinho? Há alguém que você pode ajudar?",prayer:"Jesus, que nossa família carregue os fardos uns dos outros. Amém."},
+  {ref:"Salmos 55:22",verse:"Lança sobre o Senhor o teu fardo e ele te sustentará.",reflection:"Qual fardo você ainda não lançou sobre o Senhor?",prayer:"Pai, que lancemos sobre Ti todos os nossos fardos. Amém."},
+  {ref:"Isaías 26:4",verse:"Confiai no Senhor perpetuamente, porque o Senhor Deus é uma rocha eterna.",reflection:"Você confia em Deus continuamente ou só nas crises?",prayer:"Senhor, Tu és nossa Rocha eterna. Que nossa família confie em Ti perpetuamente. Amém."},
+  {ref:"Salmos 31:24",verse:"Sede fortes, e o vosso coração se corage, vós todos que esperais no Senhor.",reflection:"Em que momento você mais precisa de coragem?",prayer:"Senhor, fortalece nossos corações. Que a esperança em Ti produza coragem. Amém."}
+];
+
+const MEMBERS = [
+  {name:"Elder",initial:"E",color:"#1a4fa3",bg:"#dce8fb"},
+  {name:"Dani",initial:"D",color:"#0a6648",bg:"#c8f0e0"},
+  {name:"Tina",initial:"T",color:"#5a35b0",bg:"#e4d8fc"},
+];
+
+let currentUser = null;
+let currentDev = null;
+let allResponses = [];
+let allPrayers = [];
+let todosEventos = [];
+let pollInterval = null;
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function devIdx() {
+  const d = new Date();
+  return Math.floor((d - new Date(2024,0,1))/86400000) % DEVOTIONALS.length;
+}
+function avHtml(m, size=40) {
+  return `<div class="avatar" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.32)}px;background:${m.bg};color:${m.color}">${m.initial}</div>`;
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+window.goTo = (id) => showScreen(id);
+window.logout = () => { currentUser=null; clearInterval(pollInterval); document.getElementById('top-avatar').style.display='none'; showScreen('screen-login'); };
+
+// MEMBERS
+document.getElementById('members-list').innerHTML = MEMBERS.map(m=>`
+  <div class="member-card" onclick="doLogin('${m.name}')">
+    ${avHtml(m,46)}
+    <div style="font-size:16px;font-weight:700;color:#1c1a15;flex:1">${m.name}</div>
+    <span style="color:#c8a96e;font-size:22px">›</span>
+  </div>`).join('');
+
+window.doLogin = (name) => {
+  currentUser = MEMBERS.find(m=>m.name===name);
+  const av = document.getElementById('top-avatar');
+  av.style.cssText = `width:34px;height:34px;font-size:13px;background:${currentUser.bg};color:${currentUser.color};display:inline-flex`;
+  av.textContent = currentUser.initial;
+  currentDev = DEVOTIONALS[devIdx()];
+  updateDevUI();
+  loadData();
+  showScreen('screen-home');
+  clearInterval(pollInterval);
+  pollInterval = setInterval(loadData, 15000);
+};
+
+function updateDevUI() {
+  const d = currentDev;
+  document.getElementById('verse-ref').textContent = d.ref;
+  document.getElementById('verse-text').textContent = '"'+d.verse+'"';
+  document.getElementById('reflection-text').textContent = '💭 '+d.reflection;
+  document.getElementById('prayer-text').textContent = d.prayer;
+  document.getElementById('rv-ref').textContent = d.ref;
+  document.getElementById('rv-verse').textContent = '"'+d.verse+'"';
+  document.getElementById('rv-reflection').textContent = '💭 '+d.reflection;
+  document.getElementById('date-label').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+}
+
+window.switchTab = (name) => {
+  ['reflexao','oracao','familia','eventos'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')===name));
+  if (name==='eventos') renderEventos();
+};
+
+window.loadData = async () => {
+  if (!currentUser) return;
+  const key = todayKey();
+  try {
+    const snapR = await get(ref(db,'responses/'+key));
+    allResponses = snapR.val() ? Object.values(snapR.val()) : [];
+    renderResponses();
+    renderMembersStatus();
+  } catch(e) { console.error(e); }
+  try {
+    const snapP = await get(ref(db,'prayers/'+key));
+    allPrayers = snapP.val() ? Object.values(snapP.val()) : [];
+    renderPrayers();
+  } catch(e) { console.error(e); }
+};
+
+function renderResponses() {
+  const pct = Math.round(allResponses.length/MEMBERS.length*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-label').textContent = allResponses.length+' de '+MEMBERS.length+' responderam';
+  const el = document.getElementById('responses-list');
+  if (!allResponses.length) { el.innerHTML='<div class="empty">Nenhuma resposta ainda. Seja o primeiro! 🙏</div>'; return; }
+  el.innerHTML = allResponses.map(r=>`
+    <div class="response-item">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        ${avHtml(r,28)}
+        <span style="font-weight:700;font-size:14px">${r.name}</span>
+        ${r.name===currentUser.name?'<span style="font-size:11px;background:#f5edd8;color:#7a5e2a;padding:2px 8px;border-radius:8px">você</span>':''}
+      </div>
+      <div style="font-size:14px;line-height:1.6;margin-bottom:8px">${r.text}</div>
+      <button class="reaction-btn" onclick="react('${r.name}','hearts')">❤ ${r.hearts||0}</button>
+      <button class="reaction-btn" onclick="react('${r.name}','prays')">🙏 ${r.prays||0}</button>
+    </div>`).join('');
+}
+
+window.react = async (name, type) => {
+  const key = todayKey();
+  const resp = allResponses.find(r=>r.name===name);
+  if (!resp) return;
+  await set(ref(db,'responses/'+key+'/'+name+'/'+type), (resp[type]||0)+1);
+  loadData();
+};
+
+window.showResponder = () => {
+  const mine = allResponses.find(r=>r.name===currentUser.name);
+  document.getElementById('my-response').value = mine?mine.text:'';
+  document.getElementById('my-current-response').innerHTML = mine?`<div class="card" style="background:#f5edd8"><div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Sua resposta atual</div><p style="font-size:14px">${mine.text}</p></div>`:'';
+  goTo('screen-responder');
+};
+
+window.submitResponse = async () => {
+  const txt = document.getElementById('my-response').value.trim();
+  if (!txt) return;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Salvando...';
+  const key = todayKey();
+  const entry = {name:currentUser.name,initial:currentUser.initial,color:currentUser.color,bg:currentUser.bg,text:txt,hearts:0,prays:0,ts:Date.now()};
+  await set(ref(db,'responses/'+key+'/'+currentUser.name), entry);
+  document.getElementById('my-response').value='';
+  btn.disabled=false; btn.textContent='Compartilhar com a família';
+  await loadData();
+  goTo('screen-home');
+};
+
+function renderPrayers() {
+  const el = document.getElementById('prayers-list');
+  if (!allPrayers.length) { el.innerHTML='<div class="empty">Nenhum pedido ainda.</div>'; return; }
+  el.innerHTML = allPrayers.map(p=>`
+    <div class="response-item">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${avHtml(p,26)}<span style="font-weight:700;font-size:13px">${p.name}</span></div>
+      <div style="font-size:14px">${p.text}</div>
+    </div>`).join('');
+}
+
+window.submitPrayer = async () => {
+  const txt = document.getElementById('prayer-input').value.trim();
+  if (!txt) return;
+  await push(ref(db,'prayers/'+todayKey()), {name:currentUser.name,initial:currentUser.initial,color:currentUser.color,bg:currentUser.bg,text:txt,ts:Date.now()});
+  document.getElementById('prayer-input').value='';
+  loadData();
+};
+
+function renderMembersStatus() {
+  const pct = Math.round(allResponses.length/MEMBERS.length*100);
+  document.getElementById('big-progress').textContent = pct+'%';
+  document.getElementById('big-progress-fill').style.width = pct+'%';
+  document.getElementById('big-progress-label').textContent = allResponses.length+' de '+MEMBERS.length+' membros responderam hoje';
+  document.getElementById('members-status').innerHTML = '<div style="font-size:10px;font-weight:700;color:#a09070;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Membros</div>' +
+    MEMBERS.map(m=>{
+      const resp = allResponses.some(r=>r.name===m.name);
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #ede8dd">${avHtml(m,36)}<span style="font-weight:700;font-size:14px">${m.name}</span><span class="status-badge ${resp?'status-yes':'status-no'}">${resp?'Respondeu ✓':'Aguardando'}</span></div>`;
+    }).join('');
+}
+
+window.submitEvento = async () => {
+  const titulo = document.getElementById('evento-titulo-input').value.trim();
+  const data = document.getElementById('evento-data-input').value;
+  const desc = document.getElementById('evento-desc-input').value.trim();
+  if (!titulo||!data) { alert('Preencha o nome e a data.'); return; }
+  const btn = document.getElementById('evento-btn');
+  btn.disabled=true; btn.textContent='Salvando...';
+  await push(ref(db,'eventos'), {titulo,data,desc,name:currentUser.name,initial:currentUser.initial,color:currentUser.color,bg:currentUser.bg,ts:Date.now()});
+  document.getElementById('evento-titulo-input').value='';
+  document.getElementById('evento-data-input').value='';
+  document.getElementById('evento-desc-input').value='';
+  btn.disabled=false; btn.textContent='Adicionar evento';
+  await renderEventos();
+};
+
+async function renderEventos() {
+  const el = document.getElementById('eventos-list');
+  if (!el) return;
+  el.innerHTML='<div class="empty">Carregando...</div>';
+  try {
+    const snap = await get(ref(db,'eventos'));
+    todosEventos = snap.val() ? Object.values(snap.val()) : [];
+    exibirEventos(todosEventos);
+  } catch(e) { el.innerHTML='<div class="empty">Erro ao carregar.</div>'; }
+}
+window.renderEventos = renderEventos;
+
+function exibirEventos(lista) {
+  const el = document.getElementById('eventos-list');
+  const ordenada = [...lista].sort((a,b)=>new Date(a.data)-new Date(b.data));
+  if (!ordenada.length) { el.innerHTML='<div class="empty">Nenhum evento encontrado.</div>'; return; }
+  const agora = new Date(); agora.setHours(0,0,0,0);
+  el.innerHTML = ordenada.map(e=>{
+    const d = new Date(e.data+'T00:00:00');
+    const passado = d < agora;
+    const dataFmt = d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    return `<div class="evento-item" style="border-left:4px solid ${passado?'#b0a890':'#a33a10'}">
+      <div style="font-size:11px;font-weight:700;color:${passado?'#b0a890':'#a33a10'};text-transform:uppercase;margin-bottom:4px">📅 ${dataFmt} ${passado?'· ✓ realizado':''}</div>
+      <div style="font-size:15px;font-weight:700;color:#1c1a15;margin-bottom:4px">${e.titulo}</div>
+      ${e.desc?`<div style="font-size:13px;color:#5a4e3a;line-height:1.5;margin-top:6px">${e.desc}</div>`:''}
+      <div style="font-size:11px;color:#b0a890;margin-top:8px">por ${e.name}</div>
+    </div>`;
+  }).join('');
+}
+
+window.filtrarEventos = () => {
+  const busca = document.getElementById('busca-data').value;
+  if (!busca) { exibirEventos(todosEventos); return; }
+  exibirEventos(todosEventos.filter(e=>e.data===busca));
+};
+window.limparFiltro = () => { document.getElementById('busca-data').value=''; exibirEventos(todosEventos); };
+
+window.generateNew = async () => {
+  const btn = document.getElementById('gen-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Gere um devocional cristão familiar em português brasileiro. Responda APENAS com JSON puro (sem markdown), no formato: {"ref":"versículo","verse":"texto","reflection":"pergunta (2-3 frases)","prayer":"oração (3-5 frases)"}'}]})});
+    const data = await resp.json();
+    currentDev = JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+    updateDevUI();
+  } catch(e) { alert('Erro ao gerar. Tente novamente.'); }
+  btn.disabled=false; btn.textContent='Gerar novo ✦';
+};
+
+</script>
+
+</body></html>
